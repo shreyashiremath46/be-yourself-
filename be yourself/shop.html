@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop All &mdash; Be Yourself</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 160'%3E%3Crect width='160' height='160' fill='%23EDE6D6'/%3E%3Ctext x='10' y='95' font-family='Arial Black, sans-serif' font-weight='900' font-size='58' fill='%23241F1A'%3EB%3C/text%3E%3Ctext x='68' y='108' font-family='Georgia, serif' font-style='italic' font-size='40' fill='%23A63446'%3Ee%3C/text%3E%3C/svg%3E">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Playfair+Display:ital@1&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap');
+
+  :root{
+    --linen:#EDE6D6;
+    --ink:#241F1A;
+    --mustard:#D9A441;
+    --teal:#2B6E64;
+    --berry:#A63446;
+    --cream:#F7F2E7;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  @keyframes bgDrift{ from{ background-position:0 0, 0 0; } to{ background-position:220px 220px, 0 0; } }
+  html,body{
+    width:100%;
+    background:
+      repeating-linear-gradient(135deg, rgba(36,31,26,0.035) 0px, rgba(36,31,26,0.035) 2px, transparent 2px, transparent 15px),
+      var(--linen);
+    background-size:220px 220px, auto;
+    animation:bgDrift 34s linear infinite;
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    overflow-x:hidden;
+  }
+  a{ color:inherit; }
+  img,svg{ display:block; }
+  :focus-visible{ outline:2px solid var(--berry); outline-offset:3px; }
+
+  /* ---------- animation utilities ---------- */
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(22px); } to{ opacity:1; transform:translateY(0); } }
+  @keyframes fadeIn{ from{ opacity:0; } to{ opacity:1; } }
+  @keyframes swatchIn{ from{ opacity:0; transform:translateY(16px) scale(0.94); } to{ opacity:0.9; transform:translateY(0) scale(1); } }
+  @keyframes bump{ 0%{ transform:scale(1); } 45%{ transform:scale(1.4); } 100%{ transform:scale(1); } }
+  @keyframes addPulse{ 0%{ box-shadow:0 0 0 0 rgba(43,110,100,0.45); } 100%{ box-shadow:0 0 0 16px rgba(43,110,100,0); } }
+
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity 0.65s ease, transform 0.65s ease; }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+
+  /* ---------- ticker marquee ---------- */
+  .ticker{ overflow:hidden; background:var(--ink); padding:14px 0; }
+  .ticker-track{ display:flex; width:max-content; gap:28px; animation:tickerScroll 22s linear infinite; }
+  .ticker:hover .ticker-track{ animation-play-state:paused; }
+  .ticker-track span{
+    font-family:'Space Mono', monospace; text-transform:uppercase;
+    letter-spacing:0.14em; font-size:13px; color:var(--linen); white-space:nowrap; opacity:0.85;
+  }
+  @keyframes tickerScroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+
+  /* ---------- confetti burst ---------- */
+  .confetti-piece{
+    position:fixed; width:6px; height:2px; border-radius:1px;
+    pointer-events:none; z-index:200; animation:confettiBurst 0.7s ease-out forwards;
+  }
+  @keyframes confettiBurst{ to{ transform:translate(var(--tx), var(--ty)) rotate(var(--tr)); opacity:0; } }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+      animation-duration:0.001ms !important; animation-iteration-count:1 !important;
+      transition-duration:0.001ms !important; scroll-behavior:auto !important;
+    }
+    .reveal{ opacity:1; transform:none; }
+  }
+
+  /* ---------- ambient background glow ---------- */
+  .bg-glow{
+    position:fixed; inset:-10%; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(680px circle at 15% 20%, rgba(217,164,65,0.16), transparent 60%),
+      radial-gradient(620px circle at 85% 75%, rgba(43,110,100,0.14), transparent 60%),
+      radial-gradient(520px circle at 60% 15%, rgba(166,52,70,0.1), transparent 60%);
+    animation:glowDrift 24s ease-in-out infinite alternate;
+  }
+  @keyframes glowDrift{
+    0%{ transform:translate(-3%, -2%) scale(1); }
+    50%{ transform:translate(2%, 3%) scale(1.08); }
+    100%{ transform:translate(-2%, 4%) scale(1); }
+  }
+
+  /* ---------- shared tokens ---------- */
+  .tagfont{ font-family:'Space Mono', monospace; }
+  .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--teal);
+    font-weight:700;
+  }
+  .section{ position:relative; padding:88px 6vw; }
+  .section-head{ max-width:640px; margin:0 auto 48px; text-align:center; }
+  .section-title{
+    font-family:'Archivo Black', sans-serif;
+    text-transform:uppercase;
+    font-size:clamp(28px, 4vw, 44px);
+    line-height:1.05;
+    margin-top:10px;
+    position:relative;
+    display:inline-block;
+  }
+  .section-title::after{
+    content:""; position:absolute; left:50%; bottom:-12px;
+    width:60px; height:3px; background:var(--berry);
+    transform:translateX(-50%) scaleX(0); transform-origin:center;
+    transition:transform 0.6s ease 0.15s;
+  }
+  .section-head.in-view .section-title::after{ transform:translateX(-50%) scaleX(1); }
+
+  /* ---------- nav ---------- */
+  .site-nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 6vw;
+    background:rgba(237,230,214,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid rgba(36,31,26,0.12);
+    animation:fadeUp 0.5s ease both;
+  }
+  .brand-tag{
+    display:flex; align-items:center; gap:11px;
+    text-decoration:none;
+  }
+  .brand-tag svg{ width:36px; height:36px; flex-shrink:0; transition:transform 0.35s ease; }
+  .brand-tag:hover svg{ transform:rotate(-10deg) scale(1.08); }
+  .brand-word{
+    font-family:'Archivo Black', sans-serif;
+    text-transform:uppercase;
+    font-size:16px;
+    letter-spacing:0.01em;
+  }
+  .brand-word .ink{ color:var(--ink); }
+  .brand-word .berry{ color:var(--berry); }
+
+  .brand-word--clash{
+    display:inline-flex; align-items:baseline; gap:2px;
+    font-size:19px; letter-spacing:normal; text-transform:none;
+  }
+  .brand-word--clash .clash-be{
+    font-family:'Archivo Black', sans-serif;
+    color:var(--ink);
+    transform:translateY(1px);
+    transition:transform 0.3s ease;
+  }
+  .brand-word--clash .clash-yourself{
+    font-family:'Playfair Display', serif;
+    font-style:italic;
+    color:var(--berry);
+    font-size:1.08em;
+    transform:translateY(-1px) rotate(0deg);
+    transition:transform 0.3s ease;
+  }
+  .brand-word--clash .clash-x{
+    color:var(--mustard);
+    font-size:11px;
+    transform:translateY(-4px) rotate(0deg);
+    transition:transform 0.3s ease;
+    display:inline-block;
+  }
+  .brand-tag--clash:hover .clash-be{ transform:translateY(1px) translateX(-2px); }
+  .brand-tag--clash:hover .clash-yourself{ transform:translateY(-1px) translateX(2px) rotate(-2deg); }
+  .brand-tag--clash:hover .clash-x{ transform:translateY(-4px) rotate(90deg); }
+  .nav-links{
+    display:flex; align-items:center; gap:34px;
+    list-style:none;
+  }
+  .nav-links a{
+    font-size:13px; font-weight:600; letter-spacing:0.05em;
+    text-transform:uppercase; text-decoration:none;
+    position:relative; padding-bottom:3px;
+  }
+  .nav-links a::after{
+    content:""; position:absolute; left:0; bottom:0; height:2px; width:0;
+    background:var(--berry); transition:width 0.2s ease;
+  }
+  .nav-links a:hover::after{ width:100%; }
+  .nav-right{ display:flex; align-items:center; gap:22px; }
+  .bag-btn{
+    display:flex; align-items:center; gap:8px;
+    background:none; border:1px solid var(--ink); border-radius:999px;
+    padding:8px 14px; cursor:pointer;
+    font-family:'Space Mono', monospace; font-size:12px;
+    transition:transform 0.15s ease;
+  }
+  .bag-btn:active{ transform:scale(0.92); }
+  .nav-toggle{ display:none; background:none; border:0; cursor:pointer; }
+  .nav-toggle span{ display:block; width:22px; height:2px; background:var(--ink); margin:5px 0; }
+
+  /* ---------- cart drawer ---------- */
+  .cart-overlay{
+    position:fixed; inset:0; background:rgba(36,31,26,0.4);
+    opacity:0; pointer-events:none; transition:opacity 0.25s ease; z-index:90;
+  }
+  .cart-overlay.open{ opacity:1; pointer-events:auto; }
+  .cart-drawer{
+    position:fixed; top:0; right:0; bottom:0; width:min(400px, 92vw);
+    background:var(--cream); z-index:91; box-shadow:-8px 0 24px rgba(36,31,26,0.18);
+    display:flex; flex-direction:column; padding:26px 24px;
+    transform:translateX(100%); transition:transform 0.3s ease;
+  }
+  .cart-drawer.open{ transform:translateX(0); }
+  .cart-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+  .cart-head h3{ font-family:'Archivo Black', sans-serif; text-transform:uppercase; font-size:18px; }
+  .cart-close{ background:none; border:0; font-size:26px; line-height:1; cursor:pointer; color:var(--ink); }
+  .cart-body{ flex:1; overflow-y:auto; }
+  .cart-empty{ color:#6b6558; font-size:14px; margin-top:10px; }
+  .cart-item{
+    display:flex; align-items:center; gap:12px;
+    padding:14px 0; border-bottom:1px solid rgba(36,31,26,0.12);
+    animation:fadeUp 0.35s ease both;
+  }
+  .cart-item-info{ flex:1; }
+  .cart-item-info h4{ font-size:14px; font-weight:600; margin-bottom:2px; }
+  .cart-item-info .sub{ font-family:'Space Mono', monospace; font-size:11px; color:#6b6558; }
+  .qty-ctrl{ display:flex; align-items:center; gap:8px; }
+  .qty-ctrl button{
+    width:24px; height:24px; border:1px solid var(--ink); background:none; border-radius:2px;
+    cursor:pointer; font-size:14px; line-height:1;
+  }
+  .qty-ctrl span{ font-family:'Space Mono', monospace; font-size:13px; min-width:14px; text-align:center; }
+  .cart-remove{
+    background:none; border:0; color:var(--berry); font-size:11px; letter-spacing:0.04em;
+    text-transform:uppercase; cursor:pointer; margin-left:8px; font-family:'Space Mono', monospace;
+  }
+  .cart-foot{ border-top:1px solid rgba(36,31,26,0.14); padding-top:16px; margin-top:12px; }
+  .cart-total{ display:flex; justify-content:space-between; font-weight:600; margin-bottom:14px; font-size:15px; }
+  @keyframes totalFlash{ 0%{ background:rgba(217,164,65,0.55); } 100%{ background:transparent; } }
+  #cartTotal{ display:inline-block; padding:0 4px; border-radius:2px; }
+  #cartTotal.flash{ animation:totalFlash 0.7s ease; }
+  .ship-form{ display:flex; flex-direction:column; gap:10px; margin-top:14px; animation:fadeUp 0.35s ease both; }
+  .ship-form h4{ font-family:'Archivo Black', sans-serif; text-transform:uppercase; font-size:14px; margin-bottom:4px; }
+  .ship-form input{
+    border:1px solid rgba(36,31,26,0.3); border-radius:2px; padding:10px 12px;
+    font-family:'Work Sans', sans-serif; font-size:13px; background:var(--linen);
+  }
+  .ship-row{ display:flex; gap:10px; }
+  .ship-row input{ flex:1; min-width:0; }
+  .order-confirm{ margin-top:20px; text-align:left; animation:fadeUp 0.4s ease both; }
+
+  /* ---------- checkout steps ---------- */
+  .cart-steps{
+    display:flex; align-items:center; gap:6px; margin-bottom:18px;
+    font-family:'Space Mono', monospace; font-size:10px; text-transform:uppercase;
+    letter-spacing:0.06em; color:#8a8375;
+  }
+  .cart-steps .step{ display:flex; align-items:center; gap:6px; transition:color 0.3s ease; white-space:nowrap; }
+  .cart-steps .step .dot{
+    width:8px; height:8px; border-radius:50%; background:#cfc6b3;
+    transition:background 0.3s ease, transform 0.3s ease;
+  }
+  .cart-steps .step.active{ color:var(--ink); }
+  .cart-steps .step.active .dot{ background:var(--berry); transform:scale(1.35); }
+  .cart-steps .step.done{ color:var(--teal); }
+  .cart-steps .step.done .dot{ background:var(--teal); }
+  .cart-steps .step-line{ flex:1; height:1px; background:#cfc6b3; }
+
+  /* ---------- order stamp ---------- */
+  .stamp-wrap{ display:flex; justify-content:center; margin-bottom:12px; }
+  .order-stamp{ width:150px; height:150px; animation:stampSlam 0.6s cubic-bezier(.34,1.56,.64,1) both; }
+  @keyframes stampSlam{
+    0%{ transform:scale(2.6) rotate(-20deg); opacity:0; }
+    55%{ transform:scale(0.9) rotate(4deg); opacity:1; }
+    100%{ transform:scale(1) rotate(-6deg); opacity:1; }
+  }
+  .stamp-check{ stroke-dasharray:90; stroke-dashoffset:90; animation:checkDraw 0.5s ease 0.5s forwards; }
+  @keyframes checkDraw{ to{ stroke-dashoffset:0; } }
+  .order-confirm p{ font-size:14px; line-height:1.6; margin-top:8px; }
+
+  /* ---------- newsletter confirm ---------- */
+  .signup-confirm{ font-family:'Space Mono', monospace; font-size:12px; padding:8px 0; animation:fadeIn 0.4s ease both; }
+  #bagCount{ display:inline-block; }
+  #bagCount.bump{ animation:bump 0.35s ease; }
+
+  @media (max-width:820px){
+    .nav-links{
+      position:absolute; top:100%; left:0; right:0;
+      flex-direction:column; align-items:flex-start; gap:0;
+      background:var(--cream); border-bottom:1px solid rgba(36,31,26,0.12);
+      max-height:0; overflow:hidden; transition:max-height 0.25s ease;
+    }
+    .nav-links.open{ max-height:280px; }
+    .nav-links li{ width:100%; }
+    .nav-links a{ display:block; padding:16px 6vw; width:100%; }
+    .nav-toggle{ display:block; }
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;
+    min-height:92vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center;
+    padding:6vw;
+    overflow:hidden;
+    cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='30' height='30'><line x1='5' y1='26' x2='25' y2='5' stroke='%23241F1A' stroke-width='2.5'/><circle cx='25' cy='5' r='2.5' fill='%23A63446'/></svg>") 6 26, auto;
+  }
+  .hero::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events:none;
+  }
+  .swatch{ position:absolute; mix-blend-mode:multiply; opacity:0.9; pointer-events:none; filter:drop-shadow(0 6px 10px rgba(36,31,26,0.16)); animation:swatchIn 0.9s ease both; }
+  .swatch.flat{ mix-blend-mode:normal; }
+  .swatch:nth-of-type(2){ animation-delay:0.08s; }
+  .swatch:nth-of-type(3){ animation-delay:0.16s; }
+  .swatch:nth-of-type(4){ animation-delay:0.24s; }
+  .swatch:nth-of-type(5){ animation-delay:0.32s; }
+  .swatch:nth-of-type(6){ animation-delay:0.4s; }
+  @keyframes spinSlow{ from{ transform:rotate(0deg); } to{ transform:rotate(360deg); } }
+  @keyframes floatBob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-8px); } }
+  .notion{ position:absolute; pointer-events:none; filter:drop-shadow(0 3px 5px rgba(36,31,26,0.18)); animation:fadeIn 1s ease 0.35s both, floatBob 5s ease-in-out 1.2s infinite; }
+  .notion.clash-stamp{ animation:fadeIn 1s ease 0.35s both, clashSway 6s ease-in-out infinite; transform-origin:50% 50%; }
+  @keyframes clashSway{ 0%,100%{ transform:rotate(-4deg); } 50%{ transform:rotate(2deg); } }
+  .defs-hidden{ position:absolute; width:0; height:0; overflow:hidden; }
+  @keyframes stampFadeLight{ from{ opacity:0; } to{ opacity:0.05; } }
+  @keyframes stampFadeAccent{ from{ opacity:0; } to{ opacity:0.06; } }
+  .stamp{
+    position:absolute;
+    font-family:'Archivo Black', sans-serif;
+    text-transform:uppercase; letter-spacing:0.02em; white-space:nowrap;
+    color:var(--ink); user-select:none; pointer-events:none;
+  }
+  .s1{ top:2%;  left:-4%;  font-size:8vw;  transform:rotate(-8deg); animation:stampFadeLight 1.4s ease 0.1s both; }
+  .s2{ top:32%; left:60%;  font-size:6vw;  transform:rotate(6deg);  color:var(--berry); animation:stampFadeAccent 1.4s ease 0.3s both; }
+  .s3{ top:70%; left:-6%;  font-size:9vw;  transform:rotate(4deg);  color:var(--teal);  animation:stampFadeAccent 1.4s ease 0.5s both; }
+
+  .seams{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+  @keyframes stitchDraw{ from{ stroke-dashoffset:520; } to{ stroke-dashoffset:0; } }
+  @keyframes seamFade{ from{ opacity:0; } to{ opacity:0.18; } }
+  .seam{ fill:none; stroke:var(--ink); stroke-width:1.5; stroke-dasharray:6 7; stroke-linecap:round; animation:seamFade 0.4s ease 0.5s both, stitchDraw 1.8s ease-out 0.5s both; }
+
+  .hero-inner{
+    position:relative; z-index:2; max-width:640px;
+    padding:26px 34px;
+  }
+  .hero-inner::before{
+    content:"";
+    position:absolute; inset:0; z-index:-1;
+    background:radial-gradient(circle, rgba(237,230,214,0.82) 0%, rgba(237,230,214,0.55) 60%, rgba(237,230,214,0) 100%);
+  }
+  .wordmark{
+    font-family:'Archivo Black', sans-serif;
+    text-transform:uppercase;
+    font-size:clamp(48px, 9vw, 128px);
+    line-height:0.92;
+  }
+  .wordmark span{ color:var(--berry); }
+  .tag{ margin-top:18px; color:#4A463E; font-size:16px; line-height:1.6; }
+  .hero-ctas{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-top:34px; }
+  .hero-inner .eyebrow{ animation:fadeUp 0.7s ease 0.15s both; }
+  .hero-inner .wordmark{ animation:fadeUp 0.8s ease 0.28s both; }
+  .hero-inner .tag{ animation:fadeUp 0.8s ease 0.4s both; }
+  .hero-inner .hero-ctas{ animation:fadeUp 0.8s ease 0.52s both; }
+  .cta{
+    display:inline-block; padding:14px 34px;
+    background:var(--ink); color:var(--cream);
+    text-decoration:none; font-size:14px; font-weight:600;
+    letter-spacing:0.06em; text-transform:uppercase; border-radius:2px;
+    transition:transform 0.15s ease, background 0.15s ease;
+    position:relative; overflow:hidden;
+  }
+  .cta::after{
+    content:""; position:absolute; top:0; left:-60%; width:40%; height:100%;
+    background:linear-gradient(120deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform:skewX(-20deg); transition:left 0.55s ease;
+  }
+  .cta:hover::after{ left:120%; }
+  .cta:hover{ background:var(--berry); transform:translateY(-2px); }
+  .cta.ghost{
+    background:none; color:var(--ink); border:1px solid var(--ink);
+  }
+  .cta.ghost:hover{ background:var(--ink); color:var(--cream); }
+
+  /* ---------- new arrivals ---------- */
+  .arrivals{ background:var(--cream); }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:28px;
+    max-width:1160px; margin:0 auto;
+  }
+  @property --border-angle{
+    syntax:'<angle>'; inherits:true; initial-value:0deg;
+  }
+  .card{
+    position:relative;
+    border:3px solid transparent;
+    border-radius:4px;
+    padding:34px 20px 22px;
+    text-align:center;
+    transition:transform 0.3s ease, box-shadow 0.4s ease;
+    background:
+      linear-gradient(var(--linen), var(--linen)) padding-box,
+      conic-gradient(from var(--border-angle), var(--mustard), var(--teal), var(--berry), var(--mustard)) border-box;
+    animation: borderRotate 6s linear infinite, borderGlow 6s ease-in-out infinite;
+  }
+  @keyframes borderRotate{ to{ --border-angle:360deg; } }
+  @keyframes borderGlow{
+    0%, 100%{ box-shadow:0 0 0 rgba(217,164,65,0); }
+    33%{ box-shadow:0 0 16px rgba(217,164,65,0.35); }
+    66%{ box-shadow:0 0 16px rgba(140,47,68,0.3); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .card{ animation:none; }
+  }
+  .card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 16px 28px rgba(36,31,26,0.14), 0 0 22px rgba(217,164,65,0.4);
+    animation: borderRotate 2s linear infinite, borderGlow 6s ease-in-out infinite;
+  }
+  .card svg.garment, .card img.card-photo{ transition:transform 0.35s ease; }
+  .card:hover svg.garment, .card:hover img.card-photo{ transform:scale(1.04); }
+  .card::before{
+    content:"Cut for you"; position:absolute; top:16px; left:-40px;
+    background:var(--mustard); color:var(--ink);
+    font-family:'Space Mono', monospace; font-size:9px; font-weight:700;
+    letter-spacing:0.06em; text-transform:uppercase; padding:5px 14px;
+    transform:rotate(-38deg); box-shadow:0 2px 4px rgba(36,31,26,0.25);
+    opacity:0; transition:opacity 0.3s ease, left 0.3s ease; pointer-events:none; z-index:3;
+  }
+  .card:hover::before{ opacity:1; left:-24px; }
+  .card svg.garment{ width:100%; height:150px; margin:0 auto 18px; }
+  .card img.card-photo{ width:100%; height:220px; object-fit:cover; border-radius:2px; margin:0 auto 18px; display:block; }
+  .card h3{ font-size:15px; font-weight:600; margin-bottom:4px; }
+  .card .sub{ font-family:'Space Mono', monospace; font-size:11px; color:#6b6558; letter-spacing:0.04em; margin-bottom:16px; }
+
+  .hangtag{
+    position:absolute; top:-14px; right:18px;
+    background:var(--mustard);
+    color:var(--ink);
+    font-family:'Space Mono', monospace;
+    font-weight:700; font-size:13px;
+    padding:6px 12px 6px 16px;
+    clip-path:polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 50%);
+    box-shadow:0 3px 6px rgba(36,31,26,0.18);
+  }
+  .hangtag::after{
+    content:""; position:absolute; top:9px; left:5px;
+    width:4px; height:4px; border-radius:50%; background:var(--linen);
+  }
+
+  .addbtn{
+    width:100%; padding:10px; margin-top:6px;
+    background:none; border:1px solid var(--ink);
+    font-size:12px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase;
+    cursor:pointer; border-radius:2px; transition:background 0.15s ease, color 0.15s ease;
+  }
+  .addbtn:hover{ background:var(--teal); color:var(--cream); border-color:var(--teal); }
+  .addbtn.added{ background:var(--teal); color:var(--cream); border-color:var(--teal); animation:addPulse 0.6s ease; }
+  .addbtn-space{ width:100%; padding:10px; margin-top:6px; border:1px solid transparent; }
+
+  /* ---------- product view modal ---------- */
+  .pv-overlay{
+    position:fixed; inset:0; background:rgba(36,31,26,0.55);
+    display:none; align-items:center; justify-content:center;
+    padding:24px; z-index:80;
+  }
+  .pv-overlay.open{ display:flex; }
+  .pv-modal{
+    background:var(--cream); border:1.5px solid var(--ink); border-radius:4px;
+    max-width:760px; width:100%; max-height:88vh; overflow-y:auto;
+    display:grid; grid-template-columns:1fr 1fr; position:relative;
+    box-shadow:0 20px 40px rgba(36,31,26,0.35);
+  }
+  @media (max-width:640px){ .pv-modal{ grid-template-columns:1fr; } }
+  .pv-close{
+    position:absolute; top:12px; right:14px; background:none; border:none;
+    font-size:26px; line-height:1; cursor:pointer; color:var(--ink);
+    width:34px; height:34px; border-radius:50%; transition:background 0.15s ease;
+  }
+  .pv-close:hover{ background:rgba(36,31,26,0.08); }
+  .pv-media{ background:var(--linen); display:flex; align-items:center; justify-content:center; padding:24px; }
+  .pv-media img{ width:100%; max-height:420px; object-fit:cover; border-radius:2px; }
+  .pv-info{ padding:34px 32px; display:flex; flex-direction:column; }
+  .pv-info .hangtag{ position:static; display:inline-block; margin-bottom:14px; align-self:flex-start; }
+  .pv-info h3{ font-family:'Archivo Black', sans-serif; font-size:22px; margin-bottom:6px; }
+  .pv-info .sub{ font-family:'Space Mono', monospace; font-size:12px; color:#6b6558; letter-spacing:0.04em; margin-bottom:20px; }
+  .pv-info .pv-desc{ font-size:14px; line-height:1.6; margin-bottom:28px; }
+  .pv-info .addbtn{ margin-top:auto; }
+
+  /* ---------- manifesto ---------- */
+  .manifesto{
+    display:flex; flex-direction:row; flex-wrap:wrap; align-items:stretch; justify-content:center;
+    gap:28px;
+    text-align:center; padding:80px 6vw;
+  }
+  .big-tag{
+    position:relative;
+    max-width:400px; flex:1 1 340px;
+    background:var(--cream);
+    border:1.5px dashed var(--ink);
+    border-radius:26px 26px 26px 100px / 26px 26px 26px 140px;
+    padding:44px 32px 36px;
+    transition:transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .big-tag:hover{ transform:translateY(-6px); box-shadow:0 14px 24px rgba(36,31,26,0.1); }
+  .big-tag::before{
+    content:""; position:absolute; top:36px; left:44px;
+    width:14px; height:14px; border-radius:50%;
+    background:var(--linen); border:1.5px dashed var(--ink);
+  }
+  .quote{
+    font-family:'Archivo Black', sans-serif;
+    text-transform:uppercase;
+    font-size:clamp(18px, 2.4vw, 26px);
+    line-height:1.25;
+  }
+  .quote .accent{ color:var(--teal); transition:color 0.3s ease; }
+  .big-tag:hover .quote .accent{ color:var(--berry); }
+  .quote-attr{
+    margin-top:20px; font-family:'Space Mono', monospace;
+    font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:#6b6558;
+  }
+
+  /* ---------- footer ---------- */
+  footer{
+    background:var(--ink); color:var(--linen);
+    padding:64px 6vw 32px;
+  }
+  .footer-grid{
+    display:grid; gap:40px;
+    grid-template-columns:1.3fr 1fr 1fr 1.2fr;
+    max-width:1160px; margin:0 auto;
+  }
+  @media (max-width:760px){ .footer-grid{ grid-template-columns:1fr 1fr; } }
+  footer h4{
+    font-family:'Space Mono', monospace; font-size:12px;
+    letter-spacing:0.1em; text-transform:uppercase; color:var(--mustard);
+    margin-bottom:14px;
+  }
+  footer ul{ list-style:none; }
+  footer li{ margin-bottom:10px; }
+  footer a{ text-decoration:none; font-size:14px; opacity:0.85; }
+  footer a:hover{ opacity:1; text-decoration:underline; }
+  .signup-tag{
+    position:relative;
+    background:var(--cream); color:var(--ink);
+    clip-path:polygon(18px 0, 100% 0, 100% 100%, 18px 100%, 0 50%);
+    padding:16px 18px 16px 26px; margin-top:6px;
+  }
+  .signup-tag::after{
+    content:""; position:absolute; top:14px; left:9px;
+    width:5px; height:5px; border-radius:50%; background:var(--ink); opacity:0.5;
+  }
+  .signup-tag form{ display:flex; gap:8px; }
+  .signup-tag input{
+    flex:1; min-width:0; border:1px solid rgba(36,31,26,0.3); border-radius:2px;
+    padding:9px 10px; font-family:'Work Sans', sans-serif; font-size:13px; background:var(--linen);
+  }
+  .signup-tag button{
+    background:var(--berry); color:var(--cream); border:0; border-radius:2px;
+    padding:9px 14px; font-size:12px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; cursor:pointer;
+  }
+  .foot-bottom{
+    max-width:1160px; margin:44px auto 0; padding-top:24px;
+    border-top:1px solid rgba(237,230,214,0.15);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    font-family:'Space Mono', monospace; font-size:11px; opacity:0.6;
+  }
+
+  @media (max-width:600px){
+    .section{ padding:64px 6vw; }
+    .manifesto{ padding:56px 6vw; flex-direction:column; }
+    .big-tag{ padding:44px 26px 36px; max-width:100%; }
+  }
+
+  /* ---------- shop page additions ---------- */
+  .shop-hero{ text-align:center; padding:64px 6vw 20px; }
+  .shop-hero h1{
+    font-family:'Archivo Black', sans-serif; text-transform:uppercase;
+    font-size:clamp(30px, 5vw, 52px); line-height:1.02; margin-top:10px;
+  }
+  .shop-hero p{ color:#4A463E; font-size:15px; margin-top:14px; max-width:520px; margin-left:auto; margin-right:auto; }
+  .filter-row{
+    display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
+    margin:30px auto 0; max-width:900px;
+  }
+  .filter-btn{
+    font-family:'Space Mono', monospace; font-size:12px; text-transform:uppercase; letter-spacing:0.06em;
+    padding:9px 18px; border:1px solid var(--ink); background:none; border-radius:999px;
+    cursor:pointer; transition:background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  }
+  .filter-btn:hover{ transform:translateY(-1px); }
+  .filter-btn.active{ background:var(--ink); color:var(--linen); }
+  .filter-count{
+    text-align:center; font-family:'Space Mono', monospace; font-size:11px; color:#6b6558;
+    letter-spacing:0.06em; text-transform:uppercase; margin-top:18px;
+  }
+  .shop-grid{
+    display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:28px; max-width:1160px; margin:0 auto;
+  }
+  .card.is-hidden{ display:none; }
+  .breadcrumb{
+    font-family:'Space Mono', monospace; font-size:11px; letter-spacing:0.06em; text-transform:uppercase;
+    color:#6b6558; text-align:center; padding-top:18px;
+  }
+  .breadcrumb a{ text-decoration:none; color:var(--teal); }
+  .breadcrumb a:hover{ text-decoration:underline; }
+
+</style>
+</head>
+<body>
+
+<div class="bg-glow" aria-hidden="true"></div>
+
+<nav class="site-nav">
+  <a class="brand-tag brand-tag--clash" href="file:///D:/chachaa/be%20yourself/index.html">
+    <span class="brand-word brand-word--clash">
+      <span class="clash-be">Be</span><span class="clash-x" aria-hidden="true">&times;</span><span class="clash-yourself">Yourself</span>
+    </span>
+  </a>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" id="navToggle">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="file:///D:/chachaa/be%20yourself/Be_yourself1.html#top">Home</a></li>
+    <li><a href="shop.html">Shop All</a></li>
+    <li><a href="index.html#manifesto">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="bag-btn" id="bagBtn" aria-label="View bag" type="button">Bag &middot; <span id="bagCount">0</span></button>
+  </div>
+</nav>
+
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+  <div class="cart-head">
+    <h3>Your bag</h3>
+    <button class="cart-close" id="cartClose" aria-label="Close bag" type="button">&times;</button>
+  </div>
+
+  <div class="cart-steps" id="cartSteps">
+    <div class="step active" data-step="bag"><span class="dot"></span>Bag</div>
+    <div class="step-line"></div>
+    <div class="step" data-step="ship"><span class="dot"></span>Shipping</div>
+    <div class="step-line"></div>
+    <div class="step" data-step="done"><span class="dot"></span>Confirmed</div>
+  </div>
+
+  <div class="cart-body" id="cartBody">
+    <p class="cart-empty" id="cartEmpty">Your bag is empty &mdash; go cut something new.</p>
+    <div class="cart-items" id="cartItems"></div>
+  </div>
+
+  <div class="cart-foot" id="cartFoot" style="display:none;">
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="cartTotal">&#8377;0</span>
+    </div>
+    <button class="cta" id="checkoutBtn" style="width:100%; text-align:center;" type="button">Checkout</button>
+  </div>
+
+  <form class="ship-form" id="shipForm" style="display:none;">
+    <h4>Shipping details</h4>
+    <input type="text" id="shipName" placeholder="Full name" required>
+    <input type="text" id="shipAddress" placeholder="Address" required>
+    <div class="ship-row">
+      <input type="text" id="shipCity" placeholder="City" required>
+      <input type="text" id="shipZip" placeholder="ZIP" required>
+    </div>
+    <button class="cta" type="submit" style="width:100%; text-align:center;">Place order</button>
+  </form>
+
+  <div class="order-confirm" id="orderConfirm" style="display:none;">
+    <div class="stamp-wrap">
+      <svg class="order-stamp" viewBox="0 0 160 160" aria-hidden="true">
+        <defs>
+          <path id="stampArc" d="M 24 96 A 56 56 0 0 1 136 96" fill="none"/>
+        </defs>
+        <circle cx="80" cy="80" r="72" fill="none" stroke="#A63446" stroke-width="5"/>
+        <circle cx="80" cy="80" r="60" fill="none" stroke="#A63446" stroke-width="2" stroke-dasharray="3 4"/>
+        <text font-family="'Archivo Black', sans-serif" font-size="13" fill="#A63446" letter-spacing="2">
+          <textPath href="#stampArc" startOffset="50%" text-anchor="middle">ORDER PLACED</textPath>
+        </text>
+        <path class="stamp-check" d="M 52 82 L 72 100 L 110 58" fill="none" stroke="#A63446" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="eyebrow" style="text-align:center;">Order placed</div>
+    <p id="confirmMsg"></p>
+    <button class="cta ghost" id="confirmClose" style="width:100%; text-align:center; margin-top:16px;" type="button">Close</button>
+  </div>
+
+</aside>
+
+<div class="pv-overlay" id="pvOverlay">
+  <div class="pv-modal" role="dialog" aria-modal="true" aria-labelledby="pvTitle">
+    <button class="pv-close" id="pvClose" aria-label="Close">&times;</button>
+    <div class="pv-media"><img id="pvImg" src="" alt=""></div>
+    <div class="pv-info">
+      <div class="hangtag" id="pvPrice">&#8377;0</div>
+      <h3 id="pvTitle"></h3>
+      <div class="sub tagfont" id="pvSub"></div>
+      <p class="pv-desc" id="pvDesc"></p>
+      <button class="addbtn" id="pvAddBtn" type="button">Add to bag</button>
+    </div>
+  </div>
+</div>
+
+<div class="shop-hero">
+  <div class="eyebrow">The full rack</div>
+  <h1>Shop All</h1>
+  <p>Jackets, boxy tees, wide-leg trousers &mdash; everything currently cut and in stock. Filter by category or scroll the whole rack.</p>
+  <div class="filter-row" role="tablist" aria-label="Filter by category">
+    <button class="filter-btn active" data-filter="all" type="button">All</button>
+    <button class="filter-btn" data-filter="jackets" type="button">Jackets</button>
+    <button class="filter-btn" data-filter="outerwear" type="button">Outerwear</button>
+    <button class="filter-btn" data-filter="tees" type="button">Tees</button>
+    <button class="filter-btn" data-filter="bottoms" type="button">Bottoms</button>
+  </div>
+  <div class="filter-count" id="filterCount">5 pieces cut for you</div>
+</div>
+
+<section class="section arrivals" style="padding-top:36px;">
+  <div class="grid shop-grid">
+
+    <div class="card" data-cat="jackets" data-id="jacket" data-name="Patch Jacket" data-price="2499">
+      <div class="hangtag">₹2499</div>
+<a href="file:///D:/chachaa/be%20yourself/product.html?id=jacket">
+      <img class="card-photo" src="L.jpg">
+</a>
+      <h3>Patch Jacket</h3>
+      <div class="sub tagfont">Water-resistant shell</div>
+      <div class="addbtn-space"></div>
+    </div>
+
+    <div class="card" data-cat="outerwear" data-id="overshirt" data-name="Utility Overshirt" data-price="1799">
+      <div class="hangtag">₹1799</div>
+<a href="file:///D:/chachaa/be%20yourself/product.html?id=overshirt">
+      <img class="card-photo" src="J.jpg">
+</a>
+      <h3>Utility Overshirt</h3>
+      <div class="sub tagfont">Brushed twill · unisex</div>
+      <div class="addbtn-space"></div>
+    </div>
+
+    <div class="card" data-cat="tees" data-id="tee" data-name="Boxy Tee" data-price="799">
+      <div class="hangtag">₹799</div>
+<a href ="file:///D:/chachaa/be%20yourself/product.html?id=tee">
+      <img class="card-photo" src="T3.jpg">
+</a>
+      <h3>Boxy Tee</h3>
+      <div class="sub tagfont">100% organic cotton</div>
+      <div class="addbtn-space"></div>
+    </div>
+
+    <div class="card" data-cat="tees" data-id="shardweb" data-name="Shardweb Tee" data-price="899">
+      <div class="hangtag">₹899</div>
+<a href="file:///D:/chachaa/be%20yourself/product.html?id=shardweb">
+      <img class="card-photo" src="T2.jpg">
+</a>
+      <h3>Shardweb Tee</h3>
+      <div class="sub tagfont">Original crack-web print</div>
+      <div class="addbtn-space"></div>
+    </div>
+
+    <div class="card" data-cat="bottoms" data-id="trouser" data-name="Wide-Leg Trouser" data-price="1299">
+      <div class="hangtag">₹1299</div>
+<a href ="file:///D:/chachaa/be%20yourself/product.html?id=trouser">
+      <img class="card-photo" src="P.jpg">
+</a>
+
+
+
+
+      <h3>Wide-Leg Trouser</h3>
+      <div class="sub tagfont">Mid-weight canvas</div>
+      <div class="addbtn-space"></div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <h4>Be Yourself</h4>
+      <p style="font-size:14px; opacity:0.75; max-width:220px; line-height:1.6;">Clothing that fits who you are, not who you're told to be.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="shop.html">All products</a></li>
+        <li><a href="shop.html#jackets">Jackets</a></li>
+        <li><a href="shop.html#tees">Tees</a></li>
+        <li><a href="shop.html#bottoms">Bottoms</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul>
+        <li><a href="index.html#manifesto">About</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Stay stitched in</h4>
+      <div class="signup-tag">
+        <form id="signupForm">
+          <input type="email" id="signupEmail" placeholder="you@email.com" aria-label="Email address" required>
+          <button type="submit">Join</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>&copy; 2026 Be Yourself. All rights reserved.</span>
+    <span>Cut, sewn, worn &mdash; on your terms.</span>
+  </div>
+</footer>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    navToggle.setAttribute('aria-expanded', open);
+  });
+
+  /* ---------- confetti burst ---------- */
+  function burstConfetti(x, y, count = 10){
+    const colors = ['#A63446', '#2B6E64', '#D9A441'];
+    for (let i = 0; i < count; i++){
+      const p = document.createElement('span');
+      p.className = 'confetti-piece';
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 30 + Math.random() * 40;
+      p.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+      p.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+      p.style.setProperty('--tr', (Math.random() * 360) + 'deg');
+      p.style.left = x + 'px';
+      p.style.top = y + 'px';
+      p.style.background = colors[i % colors.length];
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 750);
+    }
+  }
+
+  /* ---------- scroll reveal ---------- */
+  const revealEls = document.querySelectorAll('.section-head, .grid .card, .footer-grid > div');
+  revealEls.forEach((el, i) => {
+    el.classList.add('reveal');
+    el.style.transitionDelay = (i % 6) * 0.08 + 's';
+  });
+  if ('IntersectionObserver' in window){
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting){
+          entry.target.classList.add('in-view');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => revealObserver.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('in-view'));
+  }
+
+  /* ---------- category filter ---------- */
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.shop-grid .card');
+  const filterCount = document.getElementById('filterCount');
+
+  function applyFilter(cat){
+    let shown = 0;
+    cards.forEach(card => {
+      const match = cat === 'all' || card.dataset.cat === cat;
+      card.classList.toggle('is-hidden', !match);
+      if (match) shown++;
+    });
+    filterCount.textContent = shown + (shown === 1 ? ' piece' : ' pieces') + ' cut for you';
+  }
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilter(btn.dataset.filter);
+    });
+  });
+
+  applyFilter('all');
+
+  /* ---------- checkout steps + typewriter ---------- */
+  function setCartStep(step){
+    const order = ['bag', 'ship', 'done'];
+    const idx = order.indexOf(step);
+    order.forEach((s, i) => {
+      const el = document.querySelector(`.cart-steps .step[data-step="${s}"]`);
+      if (!el) return;
+      el.classList.remove('active', 'done');
+      if (i < idx) el.classList.add('done');
+      if (i === idx) el.classList.add('active');
+    });
+  }
+
+  function typeWriter(el, text, speed = 16){
+    el.textContent = '';
+    let i = 0;
+    const timer = setInterval(() => {
+      el.textContent += text.charAt(i);
+      i++;
+      if (i >= text.length) clearInterval(timer);
+    }, speed);
+  }
+
+  /* ---------- cart ---------- */
+  let cart = []; // {id, name, price, qty}
+
+  const bagCount   = document.getElementById('bagCount');
+  const cartOverlay= document.getElementById('cartOverlay');
+  const cartDrawer = document.getElementById('cartDrawer');
+  const cartEmpty  = document.getElementById('cartEmpty');
+  const cartItemsEl= document.getElementById('cartItems');
+  const cartFoot   = document.getElementById('cartFoot');
+  const cartTotal  = document.getElementById('cartTotal');
+  const shipForm   = document.getElementById('shipForm');
+  const orderConfirm = document.getElementById('orderConfirm');
+  const confirmMsg = document.getElementById('confirmMsg');
+
+  function openCart(){
+    cartDrawer.classList.add('open');
+    cartOverlay.classList.add('open');
+    cartDrawer.setAttribute('aria-hidden', 'false');
+  }
+  function closeCart(){
+    cartDrawer.classList.remove('open');
+    cartOverlay.classList.remove('open');
+    cartDrawer.setAttribute('aria-hidden', 'true');
+    shipForm.style.display = 'none';
+    orderConfirm.style.display = 'none';
+    setCartStep('bag');
+  }
+
+  document.getElementById('bagBtn').addEventListener('click', openCart);
+  document.getElementById('cartClose').addEventListener('click', closeCart);
+  cartOverlay.addEventListener('click', closeCart);
+
+  function addToCart(id, name, price){
+    const existing = cart.find(i => i.id === id);
+    if (existing) { existing.qty += 1; }
+    else { cart.push({ id, name, price, qty: 1 }); }
+    renderCart();
+    openCart();
+  }
+
+  function changeQty(id, delta){
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+    renderCart();
+  }
+
+  function removeItem(id){
+    cart = cart.filter(i => i.id !== id);
+    renderCart();
+  }
+
+  function renderCart(){
+    const count = cart.reduce((sum, i) => sum + i.qty, 0);
+    bagCount.textContent = count;
+    bagCount.classList.remove('bump');
+    void bagCount.offsetWidth;
+    bagCount.classList.add('bump');
+
+    if (cart.length === 0){
+      cartEmpty.style.display = 'block';
+      cartItemsEl.innerHTML = '';
+      cartFoot.style.display = 'none';
+      return;
+    }
+
+    cartEmpty.style.display = 'none';
+    cartFoot.style.display = 'block';
+
+    cartItemsEl.innerHTML = cart.map(i => `
+      <div class="cart-item">
+        <div class="cart-item-info">
+          <h4>${i.name}</h4>
+          <div class="sub">&#8377;${i.price} each</div>
+        </div>
+        <div class="qty-ctrl">
+          <button type="button" data-action="dec" data-id="${i.id}">&minus;</button>
+          <span>${i.qty}</span>
+          <button type="button" data-action="inc" data-id="${i.id}">+</button>
+        </div>
+        <button class="cart-remove" data-action="remove" data-id="${i.id}">Remove</button>
+      </div>
+    `).join('');
+
+    const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+    cartTotal.textContent = '\u20b9' + total;
+    cartTotal.classList.remove('flash');
+    void cartTotal.offsetWidth;
+    cartTotal.classList.add('flash');
+  }
+
+  cartItemsEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action]');
+    if (!btn) return;
+    const id = btn.dataset.id;
+    if (btn.dataset.action === 'inc') changeQty(id, 1);
+    if (btn.dataset.action === 'dec') changeQty(id, -1);
+    if (btn.dataset.action === 'remove') removeItem(id);
+  });
+
+  /* ---------- product view modal ---------- */
+  const pvDescriptions = {
+    jacket: 'A water-resistant shell jacket cut for layering, with a full front zip and a patch chest pocket. Built to hold its shape through daily wear.',
+    overshirt: 'Brushed twill shirt-jacket in a relaxed, unisex fit \u2014 the piece that goes over everything else when the weather turns.',
+    tee: 'A boxy, everyday tee in 100% organic cotton, printed with our original stacked wordmark. Cut for individuality, not for who you\u2019re told to be.',
+    shardweb: 'An original crack-web graphic radiating across the chest \u2014 our own design, not anyone else\u2019s. 100% organic cotton, boxy fit.',
+    trouser: 'A mid-weight canvas trouser with a pleated, wide-leg silhouette. Room to move, cut to last.'
+  };
+
+  const pvOverlay = document.getElementById('pvOverlay');
+  const pvImg = document.getElementById('pvImg');
+  const pvTitle = document.getElementById('pvTitle');
+  const pvSub = document.getElementById('pvSub');
+  const pvDesc = document.getElementById('pvDesc');
+  const pvPrice = document.getElementById('pvPrice');
+  const pvAddBtn = document.getElementById('pvAddBtn');
+  let pvActiveCard = null;
+
+  function openProductView(card){
+    pvActiveCard = card;
+    const img = card.querySelector('img.card-photo, svg.garment');
+    if (img && img.tagName === 'IMG'){
+      pvImg.src = img.src;
+      pvImg.alt = img.alt;
+      pvImg.style.display = '';
+    } else {
+      pvImg.style.display = 'none';
+    }
+    pvTitle.textContent = card.dataset.name;
+    pvSub.textContent = (card.querySelector('.sub') || {}).textContent || '';
+    pvDesc.textContent = pvDescriptions[card.dataset.id] || '';
+    pvPrice.textContent = '\u20b9' + card.dataset.price;
+    pvAddBtn.textContent = 'Add to bag';
+    pvAddBtn.classList.remove('added');
+    pvOverlay.classList.add('open');
+  }
+
+  function closeProductView(){
+    pvOverlay.classList.remove('open');
+    pvActiveCard = null;
+  }
+
+  document.querySelectorAll('.viewbtn').forEach(btn => {
+    btn.addEventListener('click', () => openProductView(btn.closest('.card')));
+  });
+
+  document.getElementById('pvClose').addEventListener('click', closeProductView);
+  pvOverlay.addEventListener('click', (e) => { if (e.target === pvOverlay) closeProductView(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeProductView(); });
+
+  pvAddBtn.addEventListener('click', () => {
+    if (!pvActiveCard) return;
+    addToCart(pvActiveCard.dataset.id, pvActiveCard.dataset.name, Number(pvActiveCard.dataset.price));
+    const rect = pvAddBtn.getBoundingClientRect();
+    burstConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    pvAddBtn.textContent = 'Added \u2713';
+    pvAddBtn.classList.add('added');
+    setTimeout(closeProductView, 700);
+  });
+
+  document.getElementById('checkoutBtn').addEventListener('click', () => {
+    cartFoot.style.display = 'none';
+    shipForm.style.display = 'flex';
+    setCartStep('ship');
+  });
+
+  shipForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('shipName').value.trim();
+    const city = document.getElementById('shipCity').value.trim();
+    if (!name || !city) return;
+
+    const total = cart.reduce((sum, i) => sum + i.price * i.qty, 0);
+    const message = `Thanks, ${name} \u2014 your order (\u20b9${total}) is headed to ${city}. A confirmation email is on its way.`;
+    shipForm.style.display = 'none';
+    orderConfirm.style.display = 'block';
+    setCartStep('done');
+    typeWriter(confirmMsg, message);
+    const drawerRect = cartDrawer.getBoundingClientRect();
+    burstConfetti(drawerRect.left + drawerRect.width / 2, drawerRect.top + 150, 26);
+    shipForm.reset();
+    cart = [];
+    renderCart();
+  });
+
+  document.getElementById('confirmClose').addEventListener('click', closeCart);
+
+  /* ---------- newsletter ---------- */
+  const signupForm = document.getElementById('signupForm');
+  signupForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('signupEmail').value.trim();
+    if (!email) return;
+    signupForm.parentElement.innerHTML = `<div class="signup-confirm">You're in \u2014 watch for ${email} in your inbox.</div>`;
+  });
+</script>
+
+</body>
+</html>
